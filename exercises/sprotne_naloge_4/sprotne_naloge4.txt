@@ -1,0 +1,146 @@
+1.Napišite zaporedje ukazov v zbirniku za procesor ARM, ki zamenja vrednosti 32-bitnih spremenljivk STEV1 in STEV2. Nalogo rešite s posrednim naslavljanjem preko registra R0.
+
+          .text
+   
+STEV1:    .word 0x12345678
+STEV2:    .word 0x11111111
+
+          .global __start
+__start:
+          adr r0,STEV1   @Nalozimo naslov STEV1 v regiser R0
+          ldr r1,[r0]    @Nalozimo vrednost(kamor kaze r0) v r1
+          adr r0,STEV2   @Nalozimo naslov STEV2 v regiser R0
+          ldr r2,[r0]    @Nalozimo vrednost(kamor kaze r0) v r2
+          str r1,[r0]    @shranimo vsebino r1 kamor kaze r0
+          adr r0,STEV1   @Nalozimo naslov STEV1 v regiser R0
+          str r2,[r0]    @shranimo vsebino r1 kamor kaze r0
+
+__end:    b __end   
+
+
+
+Ali se program lahko skrajša,če mamo dva bazna registra? 
+
+ADR R3, STEV1
+LDR R1,[R3]
+
+ADR R4,STEV2
+LDR R2,[R4]
+
+STR R1[R4]
+*
+STR R2,[R3]
+
+
+Kaj pa če sta STEV1 in STEV2 zaporedni?
+
+ADR R0, STEV1
+LDR R1,[R0]
+*
+LDR R2,[R0,#4]
+STR R1,[R0,#4]
+*
+STR R2,[R0]
+
+
+2.Rezervirajte prostor za tabelo z oznako TABELA, v kateri je 5 8-bitnih vrednosti. Nato napišite zaporedje ukazov v zbirniku za ARM, ki v vse bajte tabele zapiše vrednost 0xFF. Nalogo rešite s posrednim naslavljanjem preko registra R0 in uporabo takojšnjega odmika. Uporabite le ukaze za nalaganje konstant v registre in ukaze za shranjevanje vrednosti registrov v pomnilnik.
+
+
+          .text
+   
+TABELA:   .SPACE   5  @rezeviranih 5 bajtov
+
+          .align
+          .global __start
+__start:
+          ADR R0,TABELA   @nalozimo lokacijo TABELA v r0
+          MOV R1,#0xFF    @Nalozimo stevilo FF v r1
+          
+          STRB  R1,[R0]        @shranimo kar vsebuje r1 v lokacijo ki je napisna v r0
+          STRB  R1,[R0,#1]     @shranimo kar vsebuje r1 v lokacijo ki je napisna v r0 + 1 odmik
+          STRB  R1,[R0,#2]     @shranimo kar vsebuje r1 v lokacijo ki je napisna v r0 + 2 odmik
+          STRB  R1,[R0,#3]     @shranimo kar vsebuje r1 v lokacijo ki je napisna v r0 + 3 odmik
+          STRB  R1,[R0,#4]     @shranimo kar vsebuje r1 v lokacijo ki je napisna v r0 + 4 odmik
+
+__end:    b __end   
+
+
+
+
+
+
+
+3.Rezervirajte prostor za tabelo z oznako TABELA, v kateri je 6 8-bitnih vrednosti. Nato napišite zaporedje ukazov v zbirniku za ARM, ki najprej v zaporedne bajte tabele zapiše števila od 1 do 6, nato pa zamenja vrstni red elementov tabele tako, da so po zamenjavi vrstnega reda števila razporejena v obratnem vrstnem redu kot na začetku. Nalogo rešite s posrednim naslavljanjem s takojšnjim odmikom preko registra R0.
+         .text
+   
+TABELA:  .SPACE   6           @rezervacija 6 bajtov
+
+          .align
+          .global __start
+__start:
+          ADR R0,TABELA        @v register r0 nalozi lokacijo tabele
+          MOV R1,#1            @v register r1 nalozi 1
+          
+          STRB  R1,[R0]        @na lokacijo [r0](TABELA) shrani vrednost r1
+          ADD R1,R1,#1         @stevcu r1 doda 1
+          STRB  R1,[R0,#1]     @na lokacijo [r0] + 1 shrani vrednost r1
+          ADD R1,R1,#1         @stevcu r1 doda 1
+          STRB  R1,[R0,#2]     @na lokacijo [r0] + 2 shrani vrednost r1
+          ADD R1,R1,#1         @stevcu r1 doda 1
+          STRB  R1,[R0,#3]     @na lokacijo [r0] + 3 shrani vrednost r1
+          ADD R1,R1,#1         @stevcu r1 doda 1
+          STRB  R1,[R0,#4]     @na lokacijo [r0] + 4 shrani vrednost r1
+          ADD R1,R1,#1         @stevcu r1 doda 1
+          STRB  R1,[R0,#5]     @na lokacijo [r0] + 5 shrani vrednost r1
+          
+                               @zamenjaj 1. in 6.
+          LDRB  R1,[R0]        @v register r1 nalozi vredost lokacije [r0]
+          LDRB  R2,[R0,#5]     @v register r2 nalozi vredost lokacije [r0] + 5
+          STRB  R2,[R0]        @na lokacijo r0 shrani vsebino r2
+          STRB  R1,[R0,#5]     @na lokacijo r0 + 5 shrani vsebino r1
+          
+                               @zamenjaj 2. in 5.
+          LDRB  R1,[R0,#1]     @v register r1 nalozi vredost lokacije [r0] + 1  
+          LDRB  R2,[R0,#4]     @v register r2 nalozi vredost lokacije [r0] + 4
+          STRB  R2,[R0,#1]     @na lokacijo r0 + 1 shrani vsebino r2
+          STRB  R1,[R0,#4]     @na lokacijo r0 + 4 shrani vsebino r1
+          
+                               @zamenjaj 3. in 4.
+          LDRB  R1,[R0,#2]     @v register r1 nalozi vredost lokacije [r0] + 2  
+          LDRB  R2,[R0,#3]     @v register r2 nalozi vredost lokacije [r0] + 3
+          STRB  R2,[R0,#2]     @na lokacijo r0 + 2 shrani vsebino r2
+          STRB  R1,[R0,#3]     @na lokacijo r0 + 3 shrani vsebino r1
+          
+
+__end:    b __end   
+
+
+
+
+4.Napišite zaporedje ukazov v zbirniku za procesor ARM, ki 32-bitno spremenljivko STEV1, ki je v pomnilniku shranjena po pravilu tankega konca, prepiše v STEV2, pri čemer naj bo STEV2 v pomnilniku shranjena po pravilu debelega konca. Uporabite posredno naslavljanje s takojšnjim odmikom preko registrov R0 in R1.
+
+
+
+          .text
+STEV1:    .word 0x12345678
+STEV2:    .space  4          @Rezerviramo 4 bajte
+          .align
+          .global __start
+__start:
+          ADR R0, STEV1         @V R0 nalozimo lokacijo STEV1
+          ADR R1, STEV2
+      
+          LDRB R2, [R0]         @V R2 nalozimo prvih 8 bitov (od kjer kaze lokavija v R0)
+          STRB R2, [R1, #3]     @Prvih 8 bitov shranimo na lokacijo v R1 + 3         
+          
+          LDRB R2, [R0, #1]     @ naslednjih 8 bitov
+          STRB R2, [R1, #2]        
+          
+          LDRB R2, [R0, #2]
+          STRB R2, [R1, #1]
+          
+          LDRB R2, [R0, #3]
+          STRB R2, [R1]
+      
+__end:    b __end
+

@@ -1,0 +1,124 @@
+Naloge 1-3 predelajte z uporabo pogojnega izvajanja ukazov. 
+Navedite in opišite le spremembe, ki ste jih naredili v programih in komentirajte, 
+kako vam možnost uporabe pogojnega izvajanja ukazov olajša delo.
+
+@nal1
+          .text
+stev1:    .space 4
+stev2:    .word 0x15
+stev3:    .word 0x10
+
+          .global __start
+
+__start:
+          adr r0, stev2
+          ldr r2, [r0]
+          
+          adr r0, stev3
+          ldr r3, [r0]
+          
+          
+          cmp r2, r3
+          movhi r1, r2
+          movls r1, r3   
+          adr r0, stev1 
+          str r1, [r0]
+
+
+@nal2
+          .text
+stev1:    .space 4
+stev2:    .word 0x15
+stev3:    .word 0x18
+
+          .global __start
+
+__start:
+          adr r0, stev2
+          ldr r2, [r0]
+          
+          adr r0, stev3
+          ldr r3, [r0]
+          
+          
+          cmp r2, r3
+          movlo r1, r2
+          movhi r1, r3  
+          adr r0, stev1 
+          str r1, [r0]
+
+
+		  
+		  
+@nal3a
+
+          .text
+stev1:    .space 4
+stev2:    .word -1
+stev3:    .word 1
+
+          .global __start
+
+__start:
+          adr r0, stev2
+          ldr r2, [r0]
+          
+          adr r0, stev3
+          ldr r3, [r0]
+          
+          
+          cmp r2, r3
+          movgt r1, r2
+          movle r1, r3  
+          adr r0, stev1 
+          str r1, [r0]
+
+		  
+@nal3b
+
+
+          .text
+stev1:    .space 4
+stev2:    .word -1
+stev3:    .word 1
+
+          .global __start
+
+__start:
+          adr r0, stev2
+          ldr r2, [r0]
+          
+          adr r0, stev3
+          ldr r3, [r0]  
+          
+          cmp r2, r3
+          movlt r1, r2
+          movge r1, r3
+          
+          adr r0, stev1 
+          str r1, [r0]
+
+
+4. nalogo poskušajte realizirati s čimkrajšim programom (predpostavimo, 
+da sta operanda že v registrih, kjer se nahaja tudi rezultat). 
+
+          .text
+stev1:    .space 4
+stev2:    .word 105
+stev3:    .word 45
+
+          .global __start
+
+__start:
+          adr r0, stev2
+          ldr r1, [r0]
+                
+          adr r0, stev3
+          ldr r2, [r0]
+          
+zanka:    cmp r1, r2
+          beq konec
+          sublo r2,r2,r1
+          subhi r1, r1, r2
+          b zanka
+konec:    b konec   @najvecji skupni delitelj je v r1 in v r2 

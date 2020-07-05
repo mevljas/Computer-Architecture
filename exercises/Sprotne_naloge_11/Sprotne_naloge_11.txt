@@ -1,0 +1,171 @@
+Sprotne naloge 11
+1. Rezervirajte prostor za tabelo osmih 8-bitnih elementov. Nato v programski zanki vse elemente postavite na FF(16).
+
+Namig: Uporabite posredno naslavljanje brez odmika. Bazni register usmerite na začetek tabele in ga v zanki povečujte. V vsakem obhodu zanke v trenutni element vpišite FF(16).
+
+
+          .text
+          
+TABELA:   .space  8
+          .align
+          .global __start
+__start:
+
+          ADR R0, TABELA
+          MOV R1, #8  @stevec
+          MOV R2, #0xFF @vrednost
+ZANKA:
+          STRB  R2,[R0] @Vpis 0xFF
+          ADD   R0, R0, #1    @naslednji element
+          SUBS  R1, R1, #1
+          BNE   ZANKA
+                       
+
+__end:    b __end   
+
+
+
+
+
+
+
+2. Podana je tabela, v kateri je 10 nepredznačenih 8-bitnih vrednosti:
+TABELA: .byte 1,100,255,24,88,31,56,192,155,224
+
+Napišite program, ki v zanki sešteje vse elemente tabele in rezultat zapiše v 16-bitno spremenljivko REZULTAT.
+
+          .text
+          
+TABELA:   .byte 1,100,255,24,88,31,56,192,155,224
+          .align
+REZULTAT:  .hword     
+          .global __start
+
+__start:
+
+          ADR R0, TABELA
+          MOV R1, #10  @stevec
+          MOV R2, #0  @vsota
+ZANKA:
+          LDRB R3, [R0]
+          ADD   R2, R2, R3
+          ADD   R0, R0, #1    @naslednji element
+          SUBS  R1, R1, #1
+          BNE   ZANKA
+          ADR R0, REZULTAT
+          STRH  R2, [R0]             
+
+__end:    b __end   
+
+Nalogo rešite še za primer, če bi bila števila v tabeli 16-bitna in nepredznačena, rezultat pa 32-biten.
+
+          .text
+          
+TABELA:   .hword 1,100,255,24,88,31,56,192,155,224
+          .align
+REZULTAT: .word     
+          .global __start
+
+__start:
+
+          ADR R0, TABELA
+          MOV R1, #10  @stevec
+          MOV R2, #0  @vsota
+ZANKA:
+          LDRH R3, [R0]
+          ADD   R2, R2, R3
+          ADD   R0, R0, #2    @naslednji element
+          SUBS  R1, R1, #1
+          BNE   ZANKA
+          ADR R0, REZULTAT
+          STR  R2, [R0]             
+
+__end:    b __end   
+
+
+
+
+
+
+
+
+
+
+
+
+3. Podana je tabela:
+TABELA: .byte 192,155,224,48,0,128,99,147,177,100
+
+Napišite program, ki v tabeli prešteje vsa števila večja od 100 predznačeno. Rezultat naj bo na koncu izvajanja programa v registru R1.
+
+
+          .text
+          
+TABELA:   .byte 192,155,224,48,0,128,99,147,177,100
+          .align   
+          .global __start
+
+__start:
+
+          ADR R0, TABELA
+          MOV R1, #0   @steve
+          MOV R2, #10  @zanka
+ZANKA:
+          LDRSB R3, [R0]
+          CMP R3,#100
+          ADDGT R1,R1,#1
+          ADD   R0, R0, #1    @naslednji element
+          SUBS  R2, R2, #1
+          BNE   ZANKA
+        
+
+__end:    b __end   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+4. Podana je tabela, v kateri je 14 16-bitnih vrednosti:
+
+TABELA: .hword 1,100,-255,24,-88,31,56,192,155,-224,0,101,-199,47
+
+Napišite program, ki v zanki vse elemente tabele, ki so večji ali enaki -100 in manjši od 100 postavi na 0.
+
+          .text
+          
+TABELA: .hword 1,100,-255,24,-88,31,56,192,155,-224,0,101,-199,47
+          .align    
+          .global __start
+
+__start:
+
+          ADR R0, TABELA
+          MOV R1, #0   
+          MOV R2, #14  @stevec
+ZANKA:
+          LDRSH R3, [R0]
+          CMP R3, #-100
+          BLT DALJE
+          CMP R3,#100
+          BGE  DALJE
+          STRH  R1, [R0]
+DALJE:    ADD   R0, R0, #2    @naslednji element
+          SUBS  R2, R2, #1
+          BNE   ZANKA
+        
+
+__end:    b __end   
+
+
+
+

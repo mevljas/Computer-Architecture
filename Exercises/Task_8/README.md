@@ -11,7 +11,7 @@
   f) bcs
   g) blt
 
-4. Which of the following short programs endlessly run in a loop?
+4. Which of the following short programs endlessly run in a loop?  
   a)
   ```
 loop: movs r1, # 127

@@ -21,7 +21,7 @@ In the main memory there are two 32-bit variables defined as :
 STEV1: .word 0x66774455
 STEV2: .word 0x22330011
 ```
-    a) swap the lower 16 bits of the variable STEV1 with the higher 16 bits of the variable STEV2.
-    b) swap the higher 16 bits of the variable STEV1 with the lower 16 bits of the variable STEV2.
+a) swap the lower 16 bits of the variable STEV1 with the higher 16 bits of the variable STEV2.
+b) swap the higher 16 bits of the variable STEV1 with the lower 16 bits of the variable STEV2.
 
 You have to use the indirect addressing mode only.

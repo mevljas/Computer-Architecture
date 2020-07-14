@@ -1,3 +1,4 @@
+# Task 9
 1. Write the sequence of instructions for the ARM processor, which calculates the expression STEV1 = MAX (STEV2, STEV3). All variables are 32-bit and unsigned. Test your program with different values of STEV2 and STEV3. Use a conditional branch. The algorithm is determined by the following pseudo-code:
 ```
 STEV1 = STEV2
